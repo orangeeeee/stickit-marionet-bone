@@ -10,17 +10,22 @@
     });
     
     var task = new Task();
-
+    /**/
     //Marionette.ItemView1の場合、renderが不要になる。
     var TaskView = Mn.ItemView.extend({
         tagName: 'li',
+        events : {"click .command" : "test"},
+        test:function() {alert('test');},
         template: '#task-template'
     });
     
+    /**/
     /*
         // BackBone.View
         var TaskView = Backbone.View.extend({
             tagName: 'li',
+            events : {"click .command" : "test"},
+            test:function() {alert('test');},
             template: _.template( $('#task-template').html() ),
             render: function() {
                 var template = this.template( this.model.toJSON() );
@@ -34,5 +39,5 @@
     });
     console.log(taskView.render().el);
     $('body').append(taskView.render().el);
-
+    
 })();
