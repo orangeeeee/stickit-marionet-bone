@@ -1,6 +1,6 @@
 (function () {
 
-	var Item = Backbone.Model.extend({
+	var Office = Backbone.Model.extend({
 		
         //継承関係にある場合は、
         defaults :function() {
@@ -10,8 +10,9 @@
             }
         }
 	});
-	var item = new Item();
+	var office = new Item();
 
+    
 	//入力エリアのView
 	var ItemInputView = Backbone.View.extend({
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
