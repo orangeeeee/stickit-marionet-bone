@@ -1,24 +1,26 @@
 (function () {
 
 	var Item = Backbone.Model.extend({
-		
-        //継承関係にある場合は、
-        defaults :function() {
-        return {
-            code: "code",
-			name: "name"
-            }
-        }
+
+		//継承関係にある場合は、
+		defaults: function () {
+			return {
+				code: "code",
+				name: "name"
+			}
+		}
 	});
 	var item = new Item();
 
 	//入力エリアのView
-	var ItemInputView = Backbone.View.extend({
+	var ItemInputView = Mn.ItemView.extend({
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
 		el: "#input-item-code-area",
-		
+		ui: {
+			updBtn: "#updateButton"
+		},
 		events: {
-			'click #updateButton': 'updateItemInfo'
+			'click @ui.updBtn': 'updateItemInfo'
 		},
 		updateItemInfo: function () {
 			console.debug('start updateItemInfo');
@@ -28,7 +30,7 @@
 			//Modelの値を変更
 			item.set("code", _code);
 			item.set("name", 'iPhone' + _code);
-			
+
 			/* 以下のようにViewをインスタンス化して呼ぶ必要性はない。
 			console.debug('input code:'+ _code);
 			let _item = new Item({ code: _code, name:"iPhone" + _code });
@@ -37,24 +39,19 @@
 			*/
 		}
 	});
-	var TaskView = Mn.ItemView.extend({
-        tagName: 'li',
-        events : {"click .command" : "test"},
-        test:function() {alert('test');},
-        template: '#task-template'
-    });
+
 	//表示エリアのView
 	var ItemInfoView = Mn.ItemView.extend({
-		
+
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
 		el: '#result-area',
 		model: item,
 		initialize: function () {
 			this.listenTo(this.model, 'change', this.render);
 		},
-		
+
 		template: '#item-template' //Marionette Code.
-		
+
 		/** definition backbone only.
 		template: _.template( $('#item-template').html() ),
 		render: function () {
@@ -67,6 +64,5 @@
 		**/
 	});
 	new ItemInputView({});
-//	new ItemInfoView({model: item});
 	new ItemInfoView();
 })();
