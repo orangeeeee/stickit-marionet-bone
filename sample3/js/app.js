@@ -16,7 +16,7 @@
 	var ItemInputView = Backbone.View.extend({
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
 		el: "#input-item-code-area",
-
+		
 		events: {
 			'click #updateButton': 'updateItemInfo'
 		},
@@ -48,6 +48,7 @@
 		
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
 		el: '#result-area',
+		model: item,
 		initialize: function () {
 			this.listenTo(this.model, 'change', this.render);
 		},
@@ -66,5 +67,6 @@
 		**/
 	});
 	new ItemInputView({});
-	new ItemInfoView({model: item});
+//	new ItemInfoView({model: item});
+	new ItemInfoView();
 })();
