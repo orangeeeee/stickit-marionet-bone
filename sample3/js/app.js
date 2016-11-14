@@ -46,6 +46,33 @@
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
 		el: '#result-area',
 		model: item,
+
+		initialize: function () {
+			this.listenTo(this.model, 'change', this.render);
+		},
+		bindings: {
+			//selecter : modelのメンバ
+			"#codeId": "code"
+		},
+		//template: '#item-template', //Marionette Code.
+		template: _.template($('#item-template').html()),
+		
+		render: function () {
+			console.debug('ItemInfoView render stickit,underscoreの併用');
+			//templateにunderscore.jsのbindingを使用。
+			var template = this.template( this.model.toJSON() );
+			this.$el.html(template);
+			//codeのみstickitのbindingを使用。
+			this.stickit();
+			return this;
+		}
+	});
+	/** Marionetteを使用した場合
+	var ItemInfoView = Mn.ItemView.extend({
+
+		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
+		el: '#result-area',
+		model: item,
 		initialize: function () {
 			this.listenTo(this.model, 'change', this.render);
 		},
@@ -61,8 +88,8 @@
 			this.$el.html(template);
 			return this;
 		}
-		**/
 	});
+	**/
 	new ItemInputView({});
 	new ItemInfoView();
 })();

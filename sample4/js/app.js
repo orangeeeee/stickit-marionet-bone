@@ -23,19 +23,6 @@
 	let team = new Team();
 	let condition = new Condition();
 
-	let MainLayoutView = Mn.LayoutView.extend({
-		regions: {
-			main: "#main",
-			teamAreaView: "#team-setting-area",
-			conditionAreaView: "#condition-setting-area"
-		},
-
-
-		initialize: function () {
-			this.getRegion('teamAreaView').attachView(new TeamAreaView({}));
-		},
-
-	});
 
 
 	//	let mainView = new MainLayoutView();
@@ -44,21 +31,18 @@
 	//	mainView.region.attachView();
 
 	var TeamAreaView = Mn.ItemView.extend({
-		el: "#team-setting-area",
-		ui: {
-			updBtn: "#updateButton"
-		},
-		events: {
-			'click @ui.updBtn': 'updateItemInfo'
-		},
-		model: team,
-		updateItemInfo: function () {
-			console.debug('start updateItemInfo');
-			alert('update');
-		},
-
-
-
+		//		el: "#team-setting-area",
+		//		ui: {
+		//			updBtn: "#updateButton"
+		//		},
+		//		events: {
+		//			'click @ui.updBtn': 'updateItemInfo'
+		//		},
+		//		model: team,
+		//		updateItemInfo: function () {
+		//			console.debug('start updateItemInfo');
+		//			alert('update');
+		//		}
 	});
 
 	var ConditionAreaView = Mn.ItemView.extend({
@@ -73,8 +57,33 @@
 		}
 	});
 
+	let teamAreaView = new TeamAreaView({
+				el: "#team-setting-area",
+				model: team
 
+			});
+	
+	let MainLayoutView = Mn.LayoutView.extend({
+		regions: {
+			main: "#main",
+			teamAreaView: "#team-setting-area",
+			conditionAreaView: "#condition-setting-area"
+		},
+		initialize: function () {
+			this.getRegion('teamAreaView').attachView(teamAreaView);
+		},
+		ui: {
+			updBtn: "#updateButton"
+		},
+		events: {
+			'click @ui.updBtn': 'updateItemInfo'
+		},
+		updateItemInfo: function () {
+			console.debug('start updateItemInfo');
+			alert('update');
+		}
+	});
 	new ConditionAreaView();
-	new TeamAreaView();
+
 	new MainLayoutView();
 })();
