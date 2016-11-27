@@ -104,7 +104,6 @@
 		initialize: function () {
 			console.debug('dateInfoView initialize start');
             
-            this.yearMonthMap = new Map();
             this.monthDayMap = new Map();
             
             let toDay = moment();
@@ -117,6 +116,16 @@
             
             console.log('currentMonth: ' + currentMonth + 1 
                             + '月- lastMonth: ' + lastMonth + 1 + '月' + (typeof lastMonth));
+            
+            this.yearMonthMap = this.getYearMonthMap(toDay,lastMonth);
+            
+            console.log(this.yearMonthMap);
+            
+			console.debug('dateInfoView initialize end');
+		},
+        getYearMonthMap : function(toDay,lastMonth) {
+            
+            let yearMonthMap = new Map();
             
             //90日分の年と月のMapを作成する。（Method化可能）
             let countDate = toDay;
@@ -131,18 +140,15 @@
                 console.log(year + '年 ' + (countMonth + 1) + '月' );
                 
                 //Mapに設定
-                this.yearMonthMap.set(countMonth + 1, year);
+                yearMonthMap.set(countMonth + 1, year);
                 console.debug('cuuntMonth:' + countMonth);
                 console.debug('countDate:' + moment(countDate).format('YYYY/MM/DD'));
                 
                 //１ヶ後の日付を取得
                 countDate = moment(countDate).add(1, 'M');
             }
-            
-            console.log(this.yearMonthMap);
-            
-			console.debug('dateInfoView initialize end');
-		}
+            return yearMonthMap;
+        }
 	});
     
 	new ItemInputView({});
