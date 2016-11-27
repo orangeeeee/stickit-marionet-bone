@@ -67,6 +67,7 @@
 			return this;
 		}
 	});
+
 	/** Marionetteを使用した場合
 	var ItemInfoView = Mn.ItemView.extend({
 
@@ -90,6 +91,62 @@
 		}
 	});
 	**/
+    
+    	//表示エリアのView
+	var DateInfoView = Mn.ItemView.extend({
+
+		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
+		el: '#dateArea',
+        yearMonthMap : {},
+        monthDayMap : {},
+    	events: {
+		},
+		initialize: function () {
+			console.debug('dateInfoView initialize start');
+            
+            this.yearMonthMap = new Map();
+            this.monthDayMap = new Map();
+            
+            let toDay = moment();
+            //最終日を取得
+            let lastDay = moment().add(90, 'd');
+            //当月(Accepts numbers from 0 to 11.)
+            let currentMonth = moment().month();
+            //最終月(Accepts numbers from 0 to 11.)
+            let lastMonth = moment(lastDay).month();
+            
+            console.log('currentMonth: ' + currentMonth + 1 
+                            + '月- lastMonth: ' + lastMonth + 1 + '月' + (typeof lastMonth));
+            
+            //90日分の年と月のMapを作成する。（Method化可能）
+            let countDate = toDay;
+            let countMonth = 0;//= moment(countDate).month();
+            
+            while(lastMonth != countMonth) {
+                
+                //年を取得
+                let year = moment(countDate).year();
+                countMonth = moment(countDate).month();
+            
+                console.log(year + '年 ' + (countMonth + 1) + '月' );
+                
+                //Mapに設定
+                this.yearMonthMap.set(countMonth + 1, year);
+                console.debug('cuuntMonth:' + countMonth);
+                console.debug('countDate:' + moment(countDate).format('YYYY/MM/DD'));
+                
+                //１ヶ後の日付を取得
+                countDate = moment(countDate).add(1, 'M');
+            }
+            
+            console.log(this.yearMonthMap);
+            
+			console.debug('dateInfoView initialize end');
+		}
+	});
+    
 	new ItemInputView({});
 	new ItemInfoView();
+    new DateInfoView();
+    
 })();
