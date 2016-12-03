@@ -111,15 +111,21 @@
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
 		el: '#dateArea',
 		ui: {
-			monthSelect: "#select_month",
-            daySelect : "#select_day"
+			monthSelect: ".select_month",
+            daySelect : ".select_day",
+            fromMonthSelect: "#from_select_month",
+            fromDaySelect : "#from_select_day",
+            toMonthSelect: "#to_select_month",
+            toDaySelect : "#to_select_day"
+            
 		},
         yearMonthMap : {},
         monthDayMap : {},
         monthOptions : "",
         model : dateModel,
     	events: {
-            'change @ui.monthSelect': 'reRenderDaySelect'
+            'change @ui.fromMonthSelect': 'reRenderFromMonthSelect',
+            'change @ui.toMonthSelect': 'reRenderToMonthSelect'
 		},
 		initialize: function () {
                         
@@ -141,9 +147,14 @@
 //            moment('2010-10-20').isBetween('2010-10-19', '2010-10-25');
             
         },
-        reRenderDaySelect : function() {
-            let selectVal =  $(this.ui.monthSelect).val();
-            $(this.ui.daySelect).html(this.monthDayMap.get(selectVal));
+        reRenderFromMonthSelect : function() {
+            let selectVal =  $(this.ui.fromMonthSelect).val();
+            $(this.ui.fromDaySelect).html(this.monthDayMap.get(selectVal));
+        },
+        reRenderToMonthSelect : function() {
+            console.log('start reRenderToDaySelect');
+            let selectVal =  $(this.ui.toMonthSelect).val();
+            $(this.ui.toDaySelect).html(this.monthDayMap.get(selectVal));
         },
         //create map of key:month,value:year
         setSelectOptions : function() {
