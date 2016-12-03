@@ -10,7 +10,19 @@
 			}
 		}
 	});
+    var DateModel = Backbone.Model.extend({
+
+		//継承関係にある場合は、
+		defaults: function () {
+			return {
+				year: "2016",
+				month: "12",
+                day : "22"
+			}
+		}
+	});
 	var item = new Item();
+    var dateModel = new DateModel;
 
 	//入力エリアのView
 	var ItemInputView = Mn.ItemView.extend({
@@ -99,12 +111,15 @@
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
 		el: '#dateArea',
 		ui: {
-			monthSelect: "#select_month"
+			monthSelect: "#select_month",
+            daySelect : "#select_day"
 		},
         yearMonthMap : {},
         monthDayMap : {},
         monthOptions : "",
+        model : dateModel,
     	events: {
+            'change @ui.monthSelect': 'reRenderDaySelect'
 		},
 		initialize: function () {
             
@@ -123,14 +138,24 @@
             
             //プルダウンの要素を作成
             this.setSelectOptions(toDay,lastMonth);
-
+            //各プルダウンの表示
             this.renderDateSelect();
-            console.debug(monthSelectOption);
 		},
         renderDateSelect : function() {
             
             //日付の<option>を作成
-            $('#select_month').html(this.monthOptions);
+            $(this.ui.monthSelect).html(this.monthOptions);
+            //親画面から渡された日付に合わせて設定する。
+            $(this.ui.daySelect).html(this.monthDayMap.get(this.model.get('month')));
+            
+            //日付をselectedにする処理を入れる。
+            //日付が範囲外の場合は初期値を設定する。
+            
+        },
+        reRenderDaySelect : function() {
+            let selectVal =  $(this.ui.monthSelect).val();
+            ;
+            $(this.ui.daySelect).html(this.monthDayMap.get(selectVal));
         },
         //create map of key:month,value:year
         setSelectOptions : function(toDay,lastMonth) {
@@ -146,30 +171,37 @@
             while(lastMonth != countMonth) {
                 
                 //年を取得
-                let year = moment(countDate).year();
+                let _year = moment(countDate).year();
                 let _month;
-                
+                //最新日付でcurrentMonth
                 countMonth = moment(countDate).month();
-                
+                //key用
                 _month = countMonth + 1;
                 //Mapに設定
-                _yearMonthMap.set(_month);
-                    
+                _yearMonthMap.set(_month, _year);
                 //月のプルダウン作成
                 _monthOptions += this.createOption(_month);
                 //日のプルダウン作成
-                dayOption = this.createDayOfMonth();
-                _monthDayMap.set(_month, dayOption);
+                dayOption = this.createDayOfMonth(_year,countMonth);
+                _monthDayMap.set(_month.toString(), dayOption);
                 //１ヶ後の日付を取得
                 countDate = moment(countDate).add(1, 'M');
             }
-            
-            this.monthOptions = _monthOptions;
             this.yearMonthMap = _yearMonthMap;
+            this.monthOptions = _monthOptions;
+            this.monthDayMap = _monthDayMap;
         },
-        createDayOfMonth : function() {
-            let dayOption = '<option value="1">1</option>'
-          return dayOption;  
+        createDayOfMonth: function (year, month) {
+
+            let _dayOption = "";
+            
+            let toMonthEndDay = moment([year, month, 1]).daysInMonth();
+
+            for (let i = 0; i < toMonthEndDay; i++) {
+                _dayOption += this.createOption(i + 1);
+            }
+            //            let dayOption = '<option value="1">1</option>'
+            return _dayOption;
         },
         createOption : function(str) {
             return '<option value="' + str + '" >' 
