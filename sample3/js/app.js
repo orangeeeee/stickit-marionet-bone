@@ -147,8 +147,11 @@
                 
                 //年を取得
                 let year = moment(countDate).year();
-                let _month = countMonth + 1;
-                countMonth = moment(countDate).month();    
+                let _month;
+                
+                countMonth = moment(countDate).month();
+                
+                _month = countMonth + 1;
                 //Mapに設定
                 _yearMonthMap.set(_month);
                     
