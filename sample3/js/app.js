@@ -91,18 +91,22 @@
 		}
 	});
 	**/
-    
-    	//表示エリアのView
+       
+    	
+    //表示エリアのView
 	var DateInfoView = Mn.ItemView.extend({
 
 		//ビューで登録できるイベントはelの子要素に限られるから必ずelは指定する。
 		el: '#dateArea',
+		ui: {
+			monthSelect: "#select_month"
+		},
         yearMonthMap : {},
         monthDayMap : {},
+        monthOptions : "",
     	events: {
 		},
 		initialize: function () {
-			console.debug('dateInfoView initialize start');
             
             this.monthDayMap = new Map();
             
@@ -117,16 +121,24 @@
             console.log('currentMonth: ' + currentMonth + 1 
                             + '月- lastMonth: ' + lastMonth + 1 + '月' + (typeof lastMonth));
             
-            this.yearMonthMap = this.getYearMonthMap(toDay,lastMonth);
-            
-            console.log(this.yearMonthMap);
-            
-			console.debug('dateInfoView initialize end');
+            //プルダウンの要素を作成
+            this.setSelectOptions(toDay,lastMonth);
+
+            this.renderDateSelect();
+            console.debug(monthSelectOption);
 		},
-        getYearMonthMap : function(toDay,lastMonth) {
+        renderDateSelect : function() {
             
-            let yearMonthMap = new Map();
+            //日付の<option>を作成
+            $('#select_month').html(this.monthOptions);
+        },
+        //create map of key:month,value:year
+        setSelectOptions : function(toDay,lastMonth) {
             
+            let _yearMonthMap = new Map();
+            let _monthDayMap = new Map();
+            //Monthのselectのoption作成
+            let _monthOptions = "";
             //90日分の年と月のMapを作成する。（Method化可能）
             let countDate = toDay;
             let countMonth = 0;//= moment(countDate).month();
@@ -135,20 +147,38 @@
                 
                 //年を取得
                 let year = moment(countDate).year();
-                countMonth = moment(countDate).month();
-            
-                console.log(year + '年 ' + (countMonth + 1) + '月' );
-                
+                let _month = countMonth + 1;
+                countMonth = moment(countDate).month();    
                 //Mapに設定
-                yearMonthMap.set(countMonth + 1, year);
-                console.debug('cuuntMonth:' + countMonth);
-                console.debug('countDate:' + moment(countDate).format('YYYY/MM/DD'));
-                
+                _yearMonthMap.set(_month);
+                    
+                //月のプルダウン作成
+                _monthOptions += this.createOption(_month);
+                //日のプルダウン作成
+                dayOption = this.createDayOfMonth();
+                _monthDayMap.set(_month, dayOption);
                 //１ヶ後の日付を取得
                 countDate = moment(countDate).add(1, 'M');
             }
-            return yearMonthMap;
+            
+            this.monthOptions = _monthOptions;
+            this.yearMonthMap = _yearMonthMap;
+        },
+        createDayOfMonth : function() {
+            let dayOption = '<option value="1">1</option>'
+          return dayOption;  
+        },
+        createOption : function(str) {
+            return '<option value="' + str + '" >' 
+                + this.lZeroPad2Len(str); 
+                + '</option>';
+        },
+        lZeroPad2Len : function (number) {
+            let str = number.toString();
+            return str.length < 2 ? '0' + str : str;
         }
+    
+
 	});
     
 	new ItemInputView({});
