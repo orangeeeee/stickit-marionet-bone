@@ -16,7 +16,7 @@
 		defaults: function () {
 			return {
 				year: "2016",
-				month: "12",
+				month: "1",
                 day : "22"
 			}
 		}
@@ -122,22 +122,9 @@
             'change @ui.monthSelect': 'reRenderDaySelect'
 		},
 		initialize: function () {
-            
-            this.monthDayMap = new Map();
-            
-            let toDay = moment();
-            //最終日を取得
-            let lastDay = moment().add(90, 'd');
-            //当月(Accepts numbers from 0 to 11.)
-            let currentMonth = moment().month();
-            //最終月(Accepts numbers from 0 to 11.)
-            let lastMonth = moment(lastDay).month();
-            
-            console.log('currentMonth: ' + currentMonth + 1 
-                            + '月- lastMonth: ' + lastMonth + 1 + '月' + (typeof lastMonth));
-            
+                        
             //プルダウンの要素を作成
-            this.setSelectOptions(toDay,lastMonth);
+            this.setSelectOptions();
             //各プルダウンの表示
             this.renderDateSelect();
 		},
@@ -145,28 +132,32 @@
             
             //日付の<option>を作成
             $(this.ui.monthSelect).html(this.monthOptions);
+            $(this.ui.monthSelect).val(this.model.get('month'));
             //親画面から渡された日付に合わせて設定する。
             $(this.ui.daySelect).html(this.monthDayMap.get(this.model.get('month')));
-            
+            $(this.ui.daySelect).val(this.model.get('day'));
             //日付をselectedにする処理を入れる。
-            //日付が範囲外の場合は初期値を設定する。
+            //日付が範囲外の場合は初期値を設定する。(いらないかも)
+//            moment('2010-10-20').isBetween('2010-10-19', '2010-10-25');
             
         },
         reRenderDaySelect : function() {
             let selectVal =  $(this.ui.monthSelect).val();
-            ;
             $(this.ui.daySelect).html(this.monthDayMap.get(selectVal));
         },
         //create map of key:month,value:year
-        setSelectOptions : function(toDay,lastMonth) {
+        setSelectOptions : function() {
             
             let _yearMonthMap = new Map();
             let _monthDayMap = new Map();
             //Monthのselectのoption作成
             let _monthOptions = "";
-            //90日分の年と月のMapを作成する。（Method化可能）
-            let countDate = toDay;
-            let countMonth = 0;//= moment(countDate).month();
+            
+            //最終月(Accepts numbers from 0 to 11.)
+            let lastMonth = moment().add(90, 'd').month();
+        
+            let countMonth = 0;
+            let countDate = moment();
             
             while(lastMonth != countMonth) {
                 
@@ -195,12 +186,12 @@
 
             let _dayOption = "";
             
+            // 月の最終日を取得 
             let toMonthEndDay = moment([year, month, 1]).daysInMonth();
 
             for (let i = 0; i < toMonthEndDay; i++) {
                 _dayOption += this.createOption(i + 1);
             }
-            //            let dayOption = '<option value="1">1</option>'
             return _dayOption;
         },
         createOption : function(str) {
@@ -212,8 +203,6 @@
             let str = number.toString();
             return str.length < 2 ? '0' + str : str;
         }
-    
-
 	});
     
 	new ItemInputView({});
