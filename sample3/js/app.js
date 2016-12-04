@@ -15,9 +15,12 @@
 		//継承関係にある場合は、
 		defaults: function () {
 			return {
-				year: "2017",
-				month: "01",
-                day : "22"
+				fromYear: "2016",
+				fromMonth: "12",
+                fromDay : "25",
+                toYear: "2017",
+				toMonth: "01",
+                toDay : "22"
 			}
 		}
 	});
@@ -138,12 +141,16 @@
 		},
         renderDateSelect : function() {
             
-            //日付の<option>を作成
-            $(this.ui.monthSelect).html(this.monthOptions);
-            $(this.ui.monthSelect).val(this.model.get('month'));
             //親画面から渡された日付に合わせて設定する。
-            $(this.ui.daySelect).html(this.monthDayMap.get(this.model.get('month')));
-            $(this.ui.daySelect).val(this.model.get('day'));
+            $(this.ui.monthSelect).html(this.monthOptions);
+            $(this.ui.fromMonthSelect).val(this.model.get('fromMonth'));
+            $(this.ui.toMonthSelect).val(this.model.get('toMonth'));
+            
+            $(this.ui.fromDaySelect).html(this.monthDayMap.get(this.model.get('fromMonth')));
+            $(this.ui.fromDaySelect).val(this.model.get('fromDay'));
+            //To側の日SelectOption設定
+            $(this.ui.toDaySelect).html(this.monthDayMap.get(this.model.get('toMonth')));
+            $(this.ui.toDaySelect).val(this.model.get('toDay'));
             //日付をselectedにする処理を入れる。
             //日付が範囲外の場合は初期値を設定する。(いらないかも)
 //            moment('2010-10-20').isBetween('2010-10-19', '2010-10-25');
