@@ -126,7 +126,8 @@
     	events: {
             'change @ui.fromMonthSelect': 'reRenderFromMonthSelect',
             'change @ui.fromDaySelect': 'reRenderFromDaySelect',
-            'change @ui.toMonthSelect': 'reRenderToMonthSelect'
+            'change @ui.toMonthSelect': 'reRenderToMonthSelect',
+            'change @ui.toDaySelect': 'reRenderToDaySelect'
 		},
 		initialize: function () {
                         
@@ -153,7 +154,9 @@
             $(this.ui.fromDaySelect).html(this.monthDayMap.get(selectVal));
             // Toの日付が変更したFromよりも過去の場合は、ToとFromを同じ日付に変更する。
             if(this.checkPastDate()) {
-                $(this.ui.toMonthSelect).val($(this.ui.fromMonthSelect).val());
+                let fromMonthSelectVal = $(this.ui.fromMonthSelect).val();
+                $(this.ui.toMonthSelect).val(fromMonthSelectVal);
+                $(this.ui.toDaySelect).html(this.monthDayMap.get(fromMonthSelectVal));    
                 $(this.ui.toDaySelect).val($(this.ui.fromDaySelect).val());
             }
         },
@@ -161,6 +164,26 @@
             // Toの日付が変更したFromよりも過去の場合は、ToとFromを同じ日付に変更する。
             if(this.checkPastDate()) {
                 $(this.ui.toDaySelect).val($(this.ui.fromDaySelect).val());
+            }
+        },
+        reRenderToMonthSelect : function() {
+            
+            let selectVal =  $(this.ui.toMonthSelect).val();
+            //selectboxのoption入れ替え
+            $(this.ui.toDaySelect).html(this.monthDayMap.get(selectVal));
+
+            if(this.checkPastDate()) {
+                let toMonthSelectVal = $(this.ui.toMonthSelect).val();
+                $(this.ui.fromMonthSelect).val(toMonthSelectVal);
+                $(this.ui.fromDaySelect).html(this.monthDayMap.get(toMonthSelectVal));    
+                $(this.ui.fromDaySelect).val($(this.ui.toDaySelect).val());
+            }
+            
+        },
+        reRenderToDaySelect : function() {
+            // Toの日付が変更したFromよりも過去の場合は、ToとFromを同じ日付に変更する。
+            if(this.checkPastDate()) {
+                $(this.ui.fromDaySelect).val($(this.ui.toDaySelect).val());
             }
         },
         checkPastDate : function() {
@@ -175,11 +198,6 @@
             let toDate = moment([toYear, Number(toMonth)-1,toDay]);
             
             return toDate.isBefore(fromDate);
-        },
-        reRenderToMonthSelect : function() {
-            let selectVal =  $(this.ui.toMonthSelect).val();
-            $(this.ui.toDaySelect).html(this.monthDayMap.get(selectVal));
-            
         },
         //create map of key:month,value:year
         setSelectOptions : function() {
