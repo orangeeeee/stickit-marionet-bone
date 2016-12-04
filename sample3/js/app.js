@@ -15,8 +15,8 @@
 		//継承関係にある場合は、
 		defaults: function () {
 			return {
-				year: "2016",
-				month: "1",
+				year: "2017",
+				month: "01",
                 day : "22"
 			}
 		}
@@ -119,7 +119,7 @@
             toDaySelect : "#to_select_day"
             
 		},
-        yearMonthMap : {},
+        monthYearMap : {},
         monthDayMap : {},
         monthOptions : "",
         model : dateModel,
@@ -150,16 +150,36 @@
         reRenderFromMonthSelect : function() {
             let selectVal =  $(this.ui.fromMonthSelect).val();
             $(this.ui.fromDaySelect).html(this.monthDayMap.get(selectVal));
+            // Toの日付が変更したFromよりも過去の場合は、ToとFromを同じ日付に変更する。
+            if(this.checkPastDate()) {
+
+                //日付の<option>を作成
+                $(this.ui.toMonthSelect).val($(this.ui.fromMonthSelect).val());
+                $(this.ui.toDaySelect).val($(this.ui.fromDaySelect).val());
+            }
+        },
+        checkPastDate : function() {
+            let fromMonth = $(this.ui.fromMonthSelect).val();
+            let fromYear = Number(this.monthYearMap.get(fromMonth));
+            let fromDay = Number($(this.ui.fromDaySelect).val());
+            let fromDate = moment([fromYear, Number(fromMonth)-1,fromDay]);
+            
+            let toMonth = $(this.ui.toMonthSelect).val();
+            let toYear = Number(this.monthYearMap.get(toMonth));
+            let toDay = Number($(this.ui.toDaySelect).val());
+            let toDate = moment([toYear, Number(toMonth)-1,toDay]);
+            
+            return toDate.isBefore(fromDate);
         },
         reRenderToMonthSelect : function() {
-            console.log('start reRenderToDaySelect');
             let selectVal =  $(this.ui.toMonthSelect).val();
             $(this.ui.toDaySelect).html(this.monthDayMap.get(selectVal));
+            
         },
         //create map of key:month,value:year
         setSelectOptions : function() {
             
-            let _yearMonthMap = new Map();
+            let _monthYearMap = new Map();
             let _monthDayMap = new Map();
             //Monthのselectのoption作成
             let _monthOptions = "";
@@ -179,17 +199,17 @@
                 countMonth = moment(countDate).month();
                 //key用
                 _month = countMonth + 1;
-                //Mapに設定
-                _yearMonthMap.set(_month, _year);
+                //Map[key:month,value:year]に設定['01',2017]
+                _monthYearMap.set(this.lZeroPad2Len(_month), _year);
                 //月のプルダウン作成
                 _monthOptions += this.createOption(_month);
                 //日のプルダウン作成
-                dayOption = this.createDayOfMonth(_year,countMonth);
-                _monthDayMap.set(_month.toString(), dayOption);
+                dayOption = this.createDayOfMonth(_year, countMonth);
+                _monthDayMap.set(this.lZeroPad2Len(_month), dayOption);
                 //１ヶ後の日付を取得
                 countDate = moment(countDate).add(1, 'M');
             }
-            this.yearMonthMap = _yearMonthMap;
+            this.monthYearMap = _monthYearMap;
             this.monthOptions = _monthOptions;
             this.monthDayMap = _monthDayMap;
         },
@@ -199,15 +219,22 @@
             
             // 月の最終日を取得 
             let toMonthEndDay = moment([year, month, 1]).daysInMonth();
+            //当月の場合は、当日をiに設定する必要がある。
+            let firstCount=0;
+            
+            if(moment().month() === month) {
+                firstCount = moment().date() - 1;    
+            }
 
-            for (let i = 0; i < toMonthEndDay; i++) {
+            for (let i=firstCount; i < toMonthEndDay; i++) {
                 _dayOption += this.createOption(i + 1);
             }
             return _dayOption;
         },
         createOption : function(str) {
-            return '<option value="' + str + '" >' 
-                + this.lZeroPad2Len(str); 
+            let lZeroPad2LenStr = this.lZeroPad2Len(str);
+            return '<option value="' + lZeroPad2LenStr + '" >' 
+                + lZeroPad2LenStr 
                 + '</option>';
         },
         lZeroPad2Len : function (number) {
