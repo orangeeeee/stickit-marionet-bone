@@ -125,6 +125,7 @@
         model : dateModel,
     	events: {
             'change @ui.fromMonthSelect': 'reRenderFromMonthSelect',
+            'change @ui.fromDaySelect': 'reRenderFromDaySelect',
             'change @ui.toMonthSelect': 'reRenderToMonthSelect'
 		},
 		initialize: function () {
@@ -152,9 +153,13 @@
             $(this.ui.fromDaySelect).html(this.monthDayMap.get(selectVal));
             // Toの日付が変更したFromよりも過去の場合は、ToとFromを同じ日付に変更する。
             if(this.checkPastDate()) {
-
-                //日付の<option>を作成
                 $(this.ui.toMonthSelect).val($(this.ui.fromMonthSelect).val());
+                $(this.ui.toDaySelect).val($(this.ui.fromDaySelect).val());
+            }
+        },
+        reRenderFromDaySelect : function() {
+            // Toの日付が変更したFromよりも過去の場合は、ToとFromを同じ日付に変更する。
+            if(this.checkPastDate()) {
                 $(this.ui.toDaySelect).val($(this.ui.fromDaySelect).val());
             }
         },
