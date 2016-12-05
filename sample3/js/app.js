@@ -25,7 +25,7 @@
                 toDay : ""
 			}
 		},
-        initialize: function(fromDate, toDate) {
+        initialize: function() {
             // 初期化処理
             let mFromDate = moment(this.get('fromDate'));
             let toMoment = moment(this.get('toDate'));
