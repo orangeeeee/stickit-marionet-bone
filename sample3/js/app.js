@@ -15,17 +15,40 @@
 		//継承関係にある場合は、
 		defaults: function () {
 			return {
-				fromYear: "2016",
-				fromMonth: "12",
-                fromDay : "25",
-                toYear: "2017",
-				toMonth: "01",
-                toDay : "22"
+                fromDate : "",
+				fromYear: "",
+				fromMonth: "",
+                fromDay : "",
+                toDate : "",
+                toYear: "",
+				toMonth: "",
+                toDay : ""
 			}
-		}
+		},
+        initialize: function(fromDate, toDate) {
+            // 初期化処理
+            let mFromDate = moment(this.get('fromDate'));
+            let toMoment = moment(this.get('toDate'));
+            console.log(this.get('fromDate'));
+            console.log(this.get('toDate'));
+            
+            console.log(mFromDate.year());
+            console.log(mFromDate.format('MM'));
+            console.log(mFromDate.format('DD'));
+            console.log('HH:' + mFromDate.format('HH'));
+            console.log('mm:' + mFromDate.format('mm'));
+            this.set('fromYear', mFromDate.year());
+            this.set('fromMonth', mFromDate.format('MM'));
+            this.set('fromDay', toMoment.format('DD'));
+            this.set('toYear', toMoment.year());
+            this.set('toMonth', toMoment.format('MM'));
+            this.set('toDay', toMoment.format('DD'));
+            
+        },
 	});
 	var item = new Item();
-    var dateModel = new DateModel;
+//    var dateModel = new DateModel("2016/12/25 09:00","2017/01/22 18:00");
+    var dateModel = new DateModel({fromDate :"2016/12/25 09:00", toDate :"2017/01/22 18:00" });
 
 	//入力エリアのView
 	var ItemInputView = Mn.ItemView.extend({
@@ -236,7 +259,7 @@
                 //日のプルダウン作成
                 dayOption = this.createDayOfMonth(_year, countMonth);
                 _monthDayMap.set(this.lZeroPad2Len(_month), dayOption);
-                //１ヶ後の日付を取得
+                //１ヶ後の日付を取得 TODO moment()不要？ count.add(1, 'M'); ?
                 countDate = moment(countDate).add(1, 'M');
             }
             this.monthYearMap = _monthYearMap;
