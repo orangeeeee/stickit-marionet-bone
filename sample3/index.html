@@ -19,7 +19,7 @@
 		<div class="heder-label">Item Code</div>
 		<div>
 			<input type="text" id="input-item-code">
-			<input type="button" id="updateButton" value="更新">
+			<input type="button" id="updateButton" value="update">
 		</div>
 	</div>
 	<div>
@@ -30,6 +30,27 @@
 			
 		</div>
 	</div>
+    <div>
+        <div>
+            Date Information Area
+        </div>
+        <div id="dateArea" style="height:200px">
+            from:
+            <select name="fromMonth" id="from_select_month" class="select_month">
+            
+            </select>
+            <select name="fromDay" id="from_select_day" class="select_day">
+            &nbsp;&nbsp;
+            </select>
+            to:
+            <select name="toMonth" id="to_select_month" class="select_month">
+            
+            </select>
+            <select name="toDay" id="to_select_day" class="select_day">
+            
+            </select>
+        </div>
+    </div>  
     <script type="text/template" id="item-template">
         Item Code : <span id="codeId"></span><br/>
         <span>Item Name : <%- name %> </span>
@@ -37,6 +58,7 @@
 </body>
 <script src="../node_modules/underscore/underscore-min.js"></script>
 <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/moment/moment.js"></script>
 <script src="../node_modules/backbone/backbone-min.js"></script>
 <script src="../node_modules/backbone.marionette/lib/backbone.marionette.min.js"></script>
 <script src="../node_modules/backbone.stickit/backbone.stickit.js"></script>
