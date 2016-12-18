@@ -35,15 +35,20 @@
         },
         events: {
             "click #newCar": "newCarModelChange",
-            "click .smoking": "newCarModelChange"
+            "click .smoking": "smokingModelChange"
         },
         bindings: function () {
             return {
                 '.smoking': {
                     observe: 'smoking',
-                    //                onGet: 'changeTest',
-                    onGet: function (value) {
+                    onSet: function (value) {
                         console.log('onGet value:' + value);
+                    }
+                },
+                '#newCar': {
+                    observe: 'newCar',
+                    onGet: function (value) {
+                        console.log('newCar onGet value:' + value);
                     }
                 },
             }
@@ -52,6 +57,10 @@
             console.log('aaa');
         },
         newCarModelChange: function (e) {
+            console.log('newCarModelChange');
+            this.model.set('newCar', $(e.target).val());
+        },
+        smokingModelChange: function (e) {
             this.model.set('smoking', $(e.target).val());
         },
         render: function () {
