@@ -5,13 +5,18 @@
         //継承関係にある場合は、
         defaults: function () {
             return {
-                newCar: "",
-                smoking: ""
+                newCar: false,
+                smoking: ["noSelect"]
             }
+        },
+        isNoSmoking: function () {
+            return this.get('smoking') === 'smoking' ? true : false;
         }
 
     });
-    var item = new Item();
+    var item = new Item({
+        newCar: false
+    });
 
 
     //表示エリアのView
@@ -24,44 +29,56 @@
 
         },
         initialize: function () {
-            //            			this.listenTo(this.model, 'change', this.changeTest());
-            //                        this.model.on('change', this.changeTest);
-            //            this.model.on('change', this.render);
-
-
+            this.stickit();
+            // this.listenTo(this.model, 'change', this.changeTest());
+            // this.model.on('change', this.changeTest);
+            // this.model.on('change', this.render);
+            // TODO そもそもcollectionを使用してradioを表示しなければいけない？
         },
         modelEvents: {
             "change": "render"
         },
         events: {
-            "click #newCar": "newCarModelChange",
-            "click .smoking": "smokingModelChange"
+            "click .smoking": "smokingModelChange",
+            "click #testButton": "clickTest"
         },
         bindings: function () {
             return {
                 '.smoking': {
                     observe: 'smoking',
-                    onSet: function (value) {
-                        console.log('onGet value:' + value);
+                    update: function (value) {
+                        console.log('smoking onGet value:' + value);
                     }
                 },
-                '#newCar': {
-                    observe: 'newCar',
-                    onGet: function (value) {
-                        console.log('newCar onGet value:' + value);
-                    }
+                'input[type=checkbox]': {
+                    attributes: [{
+                        name: 'disabled',
+                        observe: 'newCar',
+                        onGet: 'isDisabledNewCar',
+                        update: function ($el, value, model, options) {
+                            console.log('newCar onGet value:' + value);
+                            this.newCarModelChange;
+                        }
+
+                    }]
                 },
             }
         },
-        changeTest: function () {
-            console.log('aaa');
+        isDisabledNewCar: function (val) {
+            console.log(this.model.get('smoking'));
+            let smokingVal = this.model.get('smoking');
+            return this.model.isNoSmoking();
         },
         newCarModelChange: function (e) {
-            console.log('newCarModelChange');
+            //            console.log('newCarModelChange');
             this.model.set('newCar', $(e.target).val());
         },
         smokingModelChange: function (e) {
             this.model.set('smoking', $(e.target).val());
+        },
+        clickTest: function () {
+            this.model.set('newCar', true);
+            console.log("clickTest: newCar value:" + this.model.get('newCar'));
         },
         render: function () {
             console.log('render');
