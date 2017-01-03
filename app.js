@@ -18,3 +18,6 @@ require('backbone.stickit');
 moment = require('moment');
 
 //ファイルが重くて読み込みが遅い・・・
+//minifyifyを使用して、圧縮すると軽くなる。
+// nmp install minifyify
+// browserify app.js -d -p [minifyify --map vender.js.map --output vender.js.map] > vender.js
