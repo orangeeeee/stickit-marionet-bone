@@ -30,3 +30,4 @@ gulp.task('default', function () {
 //browserify entry.js -d -p [minifyify --map bundle.js.map --output bundle.js.map --uglify [ --compress [ --dead_code--comparisons 0 ] ] ] > bundle.js
 
 //browserify entry.js -d -p [minifyify --map bundle.js.map --output bundle.js.map] > bundle.js
+//

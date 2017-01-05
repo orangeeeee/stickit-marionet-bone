@@ -1,5 +1,5 @@
 (function () {
-    
+
     _.templateSettings = {
         evaluate: /\{\{([\s\S]+?)\}\}/g,
         interpolate: /\{\{=([\s\S]+?)\}\}/g,
@@ -55,7 +55,7 @@
     var item = new Item();
     //    var dateModel = new DateModel("2016/12/25 09:00","2017/01/22 18:00");
     var dateModel = new DateModel({
-        fromDate: "2016/12/25 09:00",
+        fromDate: "2017/1/21 09:00",
         toDate: "2017/01/22 18:00"
     });
 
